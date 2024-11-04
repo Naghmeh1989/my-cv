@@ -6,8 +6,9 @@ import { UserDec} from 'src/users/decorators/user.decorator';
 import { User } from 'src/users/user.entity';
 import { ChangeAddressDto } from './dtos/change-address.dto';
 import { GetAddressDto } from './dtos/get-address.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Address')
 @Controller('address')
 export class AddressController {
   constructor(private addressService:AddressService){}

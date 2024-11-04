@@ -10,9 +10,10 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
 import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 
-
+@ApiTags('Users')
 @Controller('auth')
 @UseInterceptors(CurrentUserInterceptor)
 @Serialize(UserDto)

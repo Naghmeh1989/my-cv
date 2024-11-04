@@ -3,8 +3,9 @@ import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dtos/create-movie.dto';
 import { CreateGenreDto } from 'src/genres/dtos/create-genre.dto';
 import { CreateMovieGenreDto } from './dtos/create-movie-genre.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Movie')
 @Controller('movie')
 export class MovieController {
   constructor(private movieService:MovieService){}

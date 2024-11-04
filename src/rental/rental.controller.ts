@@ -1,11 +1,12 @@
 import { Controller, Post, Body, Get, Param} from '@nestjs/common';
 import { RentalService } from './rental.service';
 import { CreateRentalDto } from './dtos/create-rental.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 
 
 
-
+@ApiTags('Rental')
 @Controller('rental')
 export class RentalController {
   constructor(
