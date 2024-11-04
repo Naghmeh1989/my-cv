@@ -3,6 +3,7 @@ import { Movie } from "src/movie/movie.entity";
 import { User } from "src/users/user.entity";
 
 
+
 @Entity()
 export class Genre{
   @PrimaryGeneratedColumn()
