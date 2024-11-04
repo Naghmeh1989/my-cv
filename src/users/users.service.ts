@@ -5,6 +5,8 @@ import { User } from './user.entity';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
+import { Genre } from 'src/genres/genre.entity';
 
 
 const scrypt = promisify(_scrypt);
@@ -12,7 +14,10 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo:Repository<User>){}
+  constructor(@InjectRepository(User) private repo:Repository<User>,
+  @InjectRepository(Genre) private genresRepository:Repository<Genre>
+
+ ){}
  /* create(email: string , password: string){
     const user = this.repo.create({email,password});
     return this.repo.save(user);
@@ -71,6 +76,26 @@ export class UsersService {
     console.log(`Reset token: http://localhost:3000/reset-password?token=${resetToken}`);
 
     return  'Password reset link sent to email' ;
+  }
+
+   async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
+    const {userId,genreId} = createGenresSubscribtionDto;
+   
+    const user = await this.repo.findOne({
+      where: { id: userId },
+      relations: ['subscribedGenre']
+    });
+    if(!user){
+      throw new NotFoundException('User not found');
+    }
+    const genre = await this.genresRepository.findOneBy({id:genreId});
+    if(!genre){
+      throw new NotFoundException('Genre not found');
+    }
+   
+   user.subscribedGenre = user.subscribedGenre || [];
+   user.subscribedGenre.push(genre);
+   return this.repo.save(user);
   }
 
   async resetPassword(token: string, newPassword: string) {

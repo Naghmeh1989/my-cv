@@ -14,12 +14,9 @@ export class Genre{
   @ManyToMany(()=>Movie, (movie)=>movie.genres)
   movies:Movie[];
 
-  @ManyToMany(()=>User, (user)=>user.genre)
-  user:User[];
-
-
+  @ManyToMany(()=>User, (user)=>user.subscribedGenre)
+  subscribedUser:User[];
 
   @Column({nullable:true})
   isActive:boolean;
-
 }

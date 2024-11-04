@@ -45,9 +45,9 @@ export class User {
   @Column({ nullable: true })
   resetPasswordExpires: Date;
 
-  @ManyToMany(()=>Genre, (genre)=>genre.user,{ cascade: true })
+  @ManyToMany(()=>Genre, (genre)=>genre.subscribedUser,{ cascade: true })
   @JoinTable()
-  genre:Genre;
+  subscribedGenre:Genre[];
 
   
 }

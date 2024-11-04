@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Genre } from './genre.entity';
 import { CreateGenreDto } from './dtos/create-genre.dto';
 import { Movie } from 'src/movie/movie.entity';
-import { CreateGenreSubscribtionDto } from './dtos/create-genre-subscribtion.dto';
 import { User } from 'src/users/user.entity';
 
 
@@ -30,20 +29,8 @@ export class GenresService {
     return this.genresRepository.findOneBy({id});
   }
 
-  async createSubscribtion(createGenreSubscribtionDto:CreateGenreSubscribtionDto){
-    const {userId,genreId} = createGenreSubscribtionDto;
-   
-    const user = await this.repo.findOneBy({id:userId});
-    if(!user){
-      throw new NotFoundException('User not found');
-    }
-    const genre = await this.genresRepository.findOneBy({id:genreId});
-    if(!genre){
-      throw new NotFoundException('Genre not found');
-    }
-   user.genre= genre;
-   return this.repo.save(user);
-  }
   
+  
+   
   
 }

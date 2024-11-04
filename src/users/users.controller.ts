@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
 
 
 
@@ -99,6 +100,10 @@ export class UsersController {
     return this.usersService.update(parseInt(id), body);
   }
 
+  @Post('/subscribe')
+  createGenreSubscribtion(@Body() body:CreateGenresSubscribtionDto){
+    return this.usersService.createSubscribtion(body);
+  }
 
 
 
