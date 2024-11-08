@@ -7,6 +7,8 @@ import { promisify } from 'util';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
 import { Genre } from 'src/genres/genre.entity';
+import { Movie } from 'src/movie/movie.entity';
+import { MailerService } from '@nestjs-modules/mailer';
 
 
 const scrypt = promisify(_scrypt);
@@ -14,8 +16,10 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo:Repository<User>,
-  @InjectRepository(Genre) private genresRepository:Repository<Genre>
+  constructor(@InjectRepository(User) private usersRepository:Repository<User>,
+  @InjectRepository(Genre) private genresRepository:Repository<Genre>,
+  @InjectRepository(Movie) private moviesRepository:Repository<Movie>,
+  private readonly mailService: MailerService
 
  ){}
  /* create(email: string , password: string){
@@ -25,8 +29,8 @@ export class UsersService {
   }*/
 
     create(createUserDto:CreateUserDto){
-      const user = this.repo.create(createUserDto);
-      return this.repo.save(user);
+      const user = this.usersRepository.create(createUserDto);
+      return this.usersRepository.save(user);
     }
  
   
@@ -35,11 +39,11 @@ export class UsersService {
     if(!id){
       return null;
     }
-    return this.repo.findOneBy({id});
+    return this.usersRepository.findOneBy({id});
   }
 
   find(email:string){
-    return this.repo.findBy({email});
+    return this.usersRepository.findBy({email});
   }
 
   async update(id: number, attrs:Partial<User>){
@@ -48,7 +52,7 @@ export class UsersService {
       throw new NotFoundException('user not found');
     }
     Object.assign(user,attrs);
-    return this.repo.save(user);
+    return this.usersRepository.save(user);
   }
 
   async remove(id:number){
@@ -56,11 +60,11 @@ export class UsersService {
     if(!user){ 
       throw new NotFoundException('user not found');
     }
-    return this.repo.remove(user);
+    return this.usersRepository.remove(user);
   }
 
   async forgotPassword(email: string) {
-    const user = await this.repo.findOneBy({ email });
+    const user = await this.usersRepository.findOneBy({ email });
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -72,7 +76,7 @@ export class UsersService {
   
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = expirationTime;
-    await this.repo.save(user);
+    await this.usersRepository.save(user);
     console.log(`Reset token: http://localhost:3000/reset-password?token=${resetToken}`);
 
     return  'Password reset link sent to email' ;
@@ -81,7 +85,7 @@ export class UsersService {
    async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
     const {userId,genreId} = createGenresSubscribtionDto;
    
-    const user = await this.repo.findOne({
+    const user = await this.usersRepository.findOne({
       where: { id: userId },
       relations: ['subscribedGenre']
     });
@@ -92,15 +96,14 @@ export class UsersService {
     if(!genre){
       throw new NotFoundException('Genre not found');
     }
-   
    user.subscribedGenre = user.subscribedGenre || [];
    user.subscribedGenre.push(genre);
-   return this.repo.save(user);
+   return this.usersRepository.save(user);
   }
 
   async resetPassword(token: string, newPassword: string) {
     
-    const user = await this.repo.findOne({where: {
+    const user = await this.usersRepository.findOne({where: {
       resetPasswordToken: token,
       resetPasswordExpires: MoreThan(new Date()), 
     },
@@ -118,7 +121,7 @@ export class UsersService {
        user.password = hashedPassword;
        user.resetPasswordToken = null;
        user.resetPasswordExpires = null;
-       await this.repo.save(user);
+       await this.usersRepository.save(user);
    
        return  'Password successfully reset' ;
      }

@@ -1,6 +1,7 @@
 import { Rental } from "src/rental/rental.entity";
 import { Genre } from "src/genres/genre.entity";
 import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToMany, JoinTable} from "typeorm";
+import { User } from "src/users/user.entity";
 
 @Entity()
 export class Movie{
@@ -16,5 +17,8 @@ export class Movie{
   @ManyToMany(()=>Genre, (genre)=>genre.movies, {cascade:true})
   @JoinTable()
   genres:Genre[];
+
+  @ManyToMany(()=>User, (user)=>user.subscribedMovie)
+  subscribedUser:User[];
   
 }

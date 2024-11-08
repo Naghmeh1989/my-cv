@@ -11,7 +11,7 @@ import { User } from 'src/users/user.entity';
 export class GenresService {
   constructor(@InjectRepository(Genre) private genresRepository:Repository<Genre>,
   @InjectRepository(Movie) private moviesRepository:Repository<Movie>,
-  @InjectRepository(User) private repo:Repository<User>
+  @InjectRepository(User) private usersRepository:Repository<User>
    ){}
 
    async create(createGenreDto:CreateGenreDto, movieId:number){

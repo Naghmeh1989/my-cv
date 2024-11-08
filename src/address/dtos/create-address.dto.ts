@@ -26,4 +26,8 @@ export class CreateAddressDto{
   @ApiProperty()
   @IsString()
   postcode: string;
+
+  @ApiProperty()
+  @IsNumber()
+  userId:number;
 }

@@ -15,6 +15,7 @@ import { Rental } from './rental/rental.entity';
 import { GenresModule } from './genres/genres.module';
 import { Genre } from './genres/genre.entity';
 const cookieSession = require('cookie-session');
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -24,6 +25,7 @@ const cookieSession = require('cookie-session');
     synchronize: true
 
   }),
+  ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     UsersModule, ReportsModule, AddressModule, MovieModule, RentalModule, GenresModule],
   controllers: [AppController],
   providers: [AppService],

@@ -10,9 +10,9 @@ import { GetAddressDto } from './dtos/get-address.dto';
 @Injectable()
 export class AddressService {
   constructor(@InjectRepository(Address) private addressRepository:Repository<Address>){}
-  create(addressDto:CreateAddressDto, user:User){
+  create(addressDto:CreateAddressDto, userId:number){
     const address = this.addressRepository.create(addressDto);
-    address.user= user;
+    address.userId= userId;
     return this.addressRepository.save(address);
   }
 

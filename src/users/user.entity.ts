@@ -3,6 +3,7 @@ import { Report } from "src/reports/report.entity";
 import { Address } from "src/address/address.entity";
 import { Rental } from "src/rental/rental.entity";
 import { Genre } from "src/genres/genre.entity";
+import { Movie } from "src/movie/movie.entity";
 
 
 
@@ -49,5 +50,7 @@ export class User {
   @JoinTable()
   subscribedGenre:Genre[];
 
-  
+  @ManyToMany(()=>Movie, (movie)=>movie.subscribedUser, { cascade:true})
+  @JoinTable()
+  subscribedMovie:Movie[];
 }

@@ -21,4 +21,5 @@ export class CreateUserDto{
   @ApiProperty()
   @IsNumber()
   mobileNumber: number;
+
 }

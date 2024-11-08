@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 
 @ApiTags('Users')
-@Controller('auth')
+@Controller('users')
 @UseInterceptors(CurrentUserInterceptor)
 @Serialize(UserDto)
 export class UsersController {

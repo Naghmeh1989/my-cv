@@ -25,4 +25,7 @@ export class Address{
 
   @ManyToOne(()=>User ,(user)=>user.addresses)
   user: User;
+
+  @Column({nullable:true})
+  userId:number;
 }
