@@ -16,6 +16,7 @@ import { GenresModule } from './genres/genres.module';
 import { Genre } from './genres/genre.entity';
 const cookieSession = require('cookie-session');
 import { ConfigModule } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -24,6 +25,20 @@ import { ConfigModule } from '@nestjs/config';
     entities: [User, Report, Address, Movie, Rental, Genre],
     synchronize: true
 
+  }),
+  MailerModule.forRoot({
+    transport: {
+      host: 'sandbox.smtp.mailtrap.io',  
+      port: 2525,                        
+      auth: {
+        user: '54b5abaf50a933',  
+        pass: 'eaa11c2447bc92',  
+      }
+    },
+    defaults: {
+      from: '"No Reply" <noreply@example.com>',  
+    },
+    preview: false, 
   }),
   ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     UsersModule, ReportsModule, AddressModule, MovieModule, RentalModule, GenresModule],

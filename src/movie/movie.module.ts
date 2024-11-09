@@ -13,7 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Movie,Genre,User]),
-    MailerModule.forRoot({
+   /* MailerModule.forRoot({
       transport: {
         host: 'sandbox.smtp.mailtrap.io',  
         port: 2525,                        
@@ -26,7 +26,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         from: '"No Reply" <noreply@example.com>',  
       },
       preview: false, 
-    })
+    })*/
   ],
   controllers: [MovieController],
   providers: [MovieService,GenresService]

@@ -5,7 +5,4 @@ export class SendRecommendationDto{
   @IsNumber()
   genreId:number;
 
-  @ApiProperty()
-  @IsNumber()
-  userId:number;
 }
