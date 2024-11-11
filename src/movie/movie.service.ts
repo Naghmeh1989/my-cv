@@ -47,7 +47,7 @@ export class MovieService {
       });
   
       for (const user of subscribedUser ) {
-        await this.emailService.movieRecommendation(user.email,"'No Reply' <noreply@example.com>",
+        await this.emailService.movieRecommendation(user.email,
           `New Movie in ${genre.title} Genre: ${movie.title}`,
           {name:user.name,movieTitle:movie.title,genreName:genre.title});
         

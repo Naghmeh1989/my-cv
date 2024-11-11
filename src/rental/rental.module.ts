@@ -9,6 +9,7 @@ import { Movie } from 'src/movie/movie.entity';
 import { User } from 'src/users/user.entity';
 import { Genre } from 'src/genres/genre.entity';
 import { GenresService } from 'src/genres/genres.service';
+import { EmailService } from 'src/services/email.service';
 
 
 @Module({
@@ -18,6 +19,6 @@ import { GenresService } from 'src/genres/genres.service';
   TypeOrmModule.forFeature([Genre])
   ],
   controllers: [RentalController],
-  providers: [RentalService,MovieService,UsersService,GenresService]
+  providers: [RentalService,MovieService,UsersService,GenresService,EmailService]
 })
 export class RentalModule {}
