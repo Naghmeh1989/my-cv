@@ -21,10 +21,7 @@ export class MovieController {
     return this.movieService.createMovieAndGenre(body);
   }
 
-  @Post('/movie-recommendation')
-  sendMovieRecommendation(@Body() body:SendRecommendationDto){
-    return this.movieService.sendMovieRecommendation(body);
-  }
+
 
   @Get('/:id')
   findOne(@Param('id') id:string){

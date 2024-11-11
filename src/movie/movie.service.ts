@@ -8,8 +8,8 @@ import { GenresService } from 'src/genres/genres.service';
 import { CreateGenreDto } from 'src/genres/dtos/create-genre.dto';
 import { CreateMovieGenreDto } from './dtos/create-movie-genre.dto';
 import { User } from 'src/users/user.entity';
-import { MailerService } from '@nestjs-modules/mailer';
-import { SendRecommendationDto } from './dtos/send-movie-recommendation.dto';
+import { SendRecommendationDto } from './dtos/send-movie-recommendation.dto'; 
+import { EmailService } from 'src/services/email.service';
 
 @Injectable()
 export class MovieService {
@@ -17,7 +17,7 @@ export class MovieService {
   @InjectRepository(Genre) private genresRepository:Repository<Genre>,
   @InjectRepository(User) private usersRepository:Repository<User>,
   private genresService:GenresService ,
-  private readonly mailerService: MailerService
+  private readonly emailService: EmailService
   ){}
 
  /*async create(createMovieDto:CreateMovieDto, genreId:number){
@@ -47,15 +47,10 @@ export class MovieService {
       });
   
       for (const user of subscribedUser ) {
-        await this.mailerService.sendMail({
-          to: user.email,
-          subject: `New Movie in ${genre.title} Genre: ${movie.title}`,
-          context: {
-            name: user.name,
-            movieTitle: movie.title,
-            genreName: genre.title,
-          },
-        });
+        await this.emailService.movieRecommendation(user.email,"'No Reply' <noreply@example.com>",
+          `New Movie in ${genre.title} Genre: ${movie.title}`,
+          {name:user.name,movieTitle:movie.title,genreName:genre.title});
+        
        user.subscribedMovie =  user.subscribedMovie|| [];
        user.subscribedMovie.push(movie);
        await this.usersRepository.save(user);
@@ -63,51 +58,6 @@ export class MovieService {
       }
       return movie;
   }
-
-  async sendMovieRecommendation(body:SendRecommendationDto){
-    const {genreId} = body;
-    const genre = await this.genresRepository.findOneBy({ id: genreId });
-      if(!genre){
-        throw new NotFoundException('Genre not found');
-      }
-    const subscribedMovie = await this.moviesRepository.find({ where: {genres : { id: genreId } } });
-    const subscribedUser = await this.usersRepository.find({
-      where: {
-        subscribedGenre: { id: genreId } 
-      } 
-    });
-    for (const user of subscribedUser ){
-      
-      for(const movie of subscribedMovie){
-     
-      await this.mailerService.sendMail({
-        to: user.email,
-        subject: `New Movie in ${genre.title} Genre: ${movie}`,
-        
-        context: {
-          name: user.name,
-          movieTitle: movie.title,
-          genreName: genre.title,
-        },
-      });}
-      user.subscribedMovie =  user.subscribedMovie|| [];
-      user.subscribedMovie=subscribedMovie;
-      await this.usersRepository.save(user);
-      
-    } 
-    
-    
-    
-  }
-
-
-
-
-
-
-
-
-
 
 
 

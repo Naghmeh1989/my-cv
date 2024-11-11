@@ -17,6 +17,7 @@ import { Genre } from './genres/genre.entity';
 const cookieSession = require('cookie-session');
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailService } from './services/email.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -43,7 +44,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
   ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     UsersModule, ReportsModule, AddressModule, MovieModule, RentalModule, GenresModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,EmailService],
+  exports:[EmailService]
 })
 export class AppModule {
  /* configure(consumer: MiddlewareConsumer) {
