@@ -20,17 +20,17 @@ export class MovieService {
   private readonly emailService: EmailService
   ){}
 
- /*async create(createMovieDto:CreateMovieDto, genreId:number){
+  async create(createMovieDto:CreateMovieDto, genreId:number){
     const genre = await this.genresRepository.findOneBy({ id: genreId });
     if(!genre){
       throw new NotFoundException('Genre not found');
-    }
+   }
     const movie = this.moviesRepository.create(createMovieDto);
     movie.genres = movie.genres || [];
     movie.genres.push(genre);
     return this.moviesRepository.save(movie);
-  }*/
-    async create(createMovieDto:CreateMovieDto, genreId:number){
+  }
+  async createMovieAndRecommendation(createMovieDto:CreateMovieDto, genreId:number){
       const genre = await this.genresRepository.findOneBy({ id: genreId });
       if(!genre){
         throw new NotFoundException('Genre not found');
@@ -76,6 +76,7 @@ export class MovieService {
     .getMany();
 
   }
+  
   async createMovieAndGenre(createMovieGenreDto:CreateMovieGenreDto){
   const { title, genres } = createMovieGenreDto;
   const genreEntities = genres.map((title)=>{

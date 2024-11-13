@@ -21,6 +21,12 @@ export class MovieController {
     return this.movieService.createMovieAndGenre(body);
   }
 
+  @Post('movie-recommendation')
+  movieRecommendation(@Body() body:CreateMovieDto){
+    const { genreId } = body;
+    return this.movieService.createMovieAndRecommendation(body,genreId);
+  }
+
 
 
   @Get('/:id')

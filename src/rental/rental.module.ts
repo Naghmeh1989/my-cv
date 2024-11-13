@@ -10,11 +10,12 @@ import { User } from 'src/users/user.entity';
 import { Genre } from 'src/genres/genre.entity';
 import { GenresService } from 'src/genres/genres.service';
 import { EmailService } from 'src/services/email.service';
+import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Rental]),
-  TypeOrmModule.forFeature([Movie]),
+  TypeOrmModule.forFeature([Movie,MovieGenre]),
   TypeOrmModule.forFeature([User]),
   TypeOrmModule.forFeature([Genre])
   ],

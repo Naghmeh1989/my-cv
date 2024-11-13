@@ -8,9 +8,11 @@ import { CurrentUserMiddleware } from './middleware/current-user.middleware';
 import { Genre } from 'src/genres/genre.entity';
 import { Movie } from 'src/movie/movie.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
+import { EmailService } from 'src/services/email.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,Genre,Movie]),
+  imports: [TypeOrmModule.forFeature([User,Genre,Movie,MovieGenre]),
   MailerModule.forRoot({
     transport: {
       host: 'sandbox.smtp.mailtrap.io',  
@@ -26,7 +28,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     preview: false, 
   })],
   controllers: [UsersController],
-  providers: [UsersService,AuthService]
+  providers: [UsersService,AuthService,EmailService]
 })
 export class UsersModule {
   configure(consumer:MiddlewareConsumer){

@@ -1,4 +1,4 @@
-import { Module,MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,12 +18,13 @@ const cookieSession = require('cookie-session');
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailService } from './services/email.service';
+import { MovieGenre } from './middleEntities/movie_genre.entity';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'sqlite',
     database: 'db.sqlite',
-    entities: [User, Report, Address, Movie, Rental, Genre],
+    entities: [User, Report, Address, Movie, Rental, Genre, MovieGenre],
     synchronize: true
 
   }),

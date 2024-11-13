@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany,OneToMany} from "typeorm";
 import { Movie } from "src/movie/movie.entity";
 import { User } from "src/users/user.entity";
+import { MovieGenre } from "src/middleEntities/movie_genre.entity";
 
 
 
@@ -20,4 +21,7 @@ export class Genre{
 
   @Column({nullable:true})
   isActive:boolean;
+
+  @OneToMany(()=>MovieGenre , (movieGenre)=>movieGenre.genre)
+  movieGenre: MovieGenre[];
 }

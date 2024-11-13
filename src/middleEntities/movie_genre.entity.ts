@@ -12,9 +12,9 @@ export class MovieGenre {
 
   @ManyToOne(()=>Genre, (genre)=>genre.movies)
   @JoinColumn({name:'genre_id', referencedColumnName:'id'})
-  genre:Genre[];
+  genre:Genre;
 
   @ManyToOne(()=>Movie, (movie)=>movie.genres)
   @JoinColumn({name:'movie_id', referencedColumnName:'id'})
-  movie:Movie[];
+  movie:Movie;
 }

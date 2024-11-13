@@ -8,7 +8,8 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
 import { Genre } from 'src/genres/genre.entity';
 import { Movie } from 'src/movie/movie.entity';
-import { MailerService } from '@nestjs-modules/mailer';
+import { EmailService } from 'src/services/email.service';
+import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
 
 
 const scrypt = promisify(_scrypt);
@@ -19,7 +20,8 @@ export class UsersService {
   constructor(@InjectRepository(User) private usersRepository:Repository<User>,
   @InjectRepository(Genre) private genresRepository:Repository<Genre>,
   @InjectRepository(Movie) private moviesRepository:Repository<Movie>,
-  private readonly mailService: MailerService
+  @InjectRepository(MovieGenre) private moviesGenresRepository:Repository<MovieGenre>,
+  private readonly emailService: EmailService
 
  ){}
  /* create(email: string , password: string){
@@ -41,6 +43,7 @@ export class UsersService {
     }
     return this.usersRepository.findOneBy({id});
   }
+
 
   find(email:string){
     return this.usersRepository.findBy({email});
@@ -82,7 +85,7 @@ export class UsersService {
     return  'Password reset link sent to email' ;
   }
 
-   async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
+  /* async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
     const {userId,genreId} = createGenresSubscribtionDto;
    
     const user = await this.usersRepository.findOne({
@@ -99,7 +102,39 @@ export class UsersService {
    user.subscribedGenre = user.subscribedGenre || [];
    user.subscribedGenre.push(genre);
    return this.usersRepository.save(user);
+  }*/
+
+
+   async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
+    const {userId,genreId} = createGenresSubscribtionDto;
+   
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['subscribedGenre']
+    });
+    if(!user){
+      throw new NotFoundException('User not found');
+    }
+    const genre = await this.genresRepository.findOneBy({id:genreId});
+    if(!genre){
+      throw new NotFoundException('Genre not found');
+    }
+   user.subscribedGenre = user.subscribedGenre || [];
+   user.subscribedGenre.push(genre);
+
+   const movieGenres = await this.moviesGenresRepository.find( {where: { genreId },
+    relations: ['movie']});
+   for(const movieGenre of movieGenres){
+    user.subscribedMovie = user.subscribedMovie || [];
+    user.subscribedMovie.push(movieGenre.movie);
+   }
+   await this.usersRepository.save(user);
+   await this.emailService.movieRecommendation(user.email,
+    `New Movie in ${genre.title} Genre: ${user.subscribedMovie}`,
+    {name:user.name,movieTitle:user.subscribedMovie,genreName:genre.title});
+   return user;
   }
+
 
   async resetPassword(token: string, newPassword: string) {
     
