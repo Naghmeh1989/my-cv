@@ -10,9 +10,11 @@ import { Movie } from 'src/movie/movie.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
 import { EmailService } from 'src/services/email.service';
+import { UserGenre } from 'src/middleEntities/user_genre.entity';
+import { UserMovie } from 'src/middleEntities/user_movie.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,Genre,Movie,MovieGenre]),
+  imports: [TypeOrmModule.forFeature([User,Genre,Movie,MovieGenre,UserGenre,UserMovie]),
   MailerModule.forRoot({
     transport: {
       host: 'sandbox.smtp.mailtrap.io',  

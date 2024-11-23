@@ -10,6 +10,10 @@ import { Genre } from 'src/genres/genre.entity';
 import { Movie } from 'src/movie/movie.entity';
 import { EmailService } from 'src/services/email.service';
 import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
+import { UserGenre } from 'src/middleEntities/user_genre.entity';
+import { UserMovie } from 'src/middleEntities/user_movie.entity';
+import { GetMovieDto } from './dtos/get-movie.dto';
+
 
 
 const scrypt = promisify(_scrypt);
@@ -21,6 +25,8 @@ export class UsersService {
   @InjectRepository(Genre) private genresRepository:Repository<Genre>,
   @InjectRepository(Movie) private moviesRepository:Repository<Movie>,
   @InjectRepository(MovieGenre) private moviesGenresRepository:Repository<MovieGenre>,
+  @InjectRepository(UserGenre) private usersGenresRepository:Repository<UserGenre>,
+  @InjectRepository(UserMovie) private usersMoviesRepository:Repository<UserMovie>,
   private readonly emailService: EmailService
 
  ){}
@@ -33,6 +39,22 @@ export class UsersService {
     create(createUserDto:CreateUserDto){
       const user = this.usersRepository.create(createUserDto);
       return this.usersRepository.save(user);
+    }
+
+    async createUserGenre(createUserGenre:{userId:number, genreId:number}){
+      const user = await this.usersRepository.findOne({where: {id: createUserGenre.userId}});
+      if(!user){
+        throw new NotFoundException()
+      }
+      await this.usersGenresRepository.save(createUserGenre);
+    }
+
+    async createUserMovie(createUserMovie:{userId:number, movieId:number}){
+      const user = await this.usersRepository.findOne({where: {id: createUserMovie.userId}});
+      if(!user){
+        throw new NotFoundException()
+      }
+      await this.usersMoviesRepository.save(createUserMovie);
     }
  
   
@@ -85,7 +107,7 @@ export class UsersService {
     return  'Password reset link sent to email' ;
   }
 
-  /* async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
+   /*async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
     const {userId,genreId} = createGenresSubscribtionDto;
    
     const user = await this.usersRepository.findOne({
@@ -99,6 +121,7 @@ export class UsersService {
     if(!genre){
       throw new NotFoundException('Genre not found');
     }
+   const userGenre = await this.usersGenresRepository.save(createGenresSubscribtionDto);
    user.subscribedGenre = user.subscribedGenre || [];
    user.subscribedGenre.push(genre);
    return this.usersRepository.save(user);
@@ -107,7 +130,6 @@ export class UsersService {
 
    async createSubscribtion(createGenresSubscribtionDto:CreateGenresSubscribtionDto){
     const {userId,genreId} = createGenresSubscribtionDto;
-   
     const user = await this.usersRepository.findOne({
       where: { id: userId },
       relations: ['subscribedGenre']
@@ -119,22 +141,27 @@ export class UsersService {
     if(!genre){
       throw new NotFoundException('Genre not found');
     }
+   const userGenre = await this.usersGenresRepository.save(createGenresSubscribtionDto);
    user.subscribedGenre = user.subscribedGenre || [];
    user.subscribedGenre.push(genre);
 
-   const movieGenres = await this.moviesGenresRepository.find( {where: { genreId },
-    relations: ['movie']});
+  
+   const movieGenres = await this.moviesGenresRepository.find( {where: { genreId }});
+   const movieTitles = [];
+   const movieIds = [];
    for(const movieGenre of movieGenres){
-    user.subscribedMovie = user.subscribedMovie || [];
-    user.subscribedMovie.push(movieGenre.movie);
+    movieIds.push(movieGenre.movieId);
+   }
+   for(const movieId of movieIds){
+    const movie = await this.moviesRepository.findOne({where:{id:movieId}});
+    movieTitles.push(movie.title);
    }
    await this.usersRepository.save(user);
    await this.emailService.movieRecommendation(user.email,
-    `New Movie in ${genre.title} Genre: ${user.subscribedMovie}`,
+    `New Movie in ${genre.title} Genre: ${movieTitles}`,
     {name:user.name,movieTitle:user.subscribedMovie,genreName:genre.title});
    return user;
   }
-
 
   async resetPassword(token: string, newPassword: string) {
     

@@ -4,7 +4,9 @@ import { Address } from "src/address/address.entity";
 import { Rental } from "src/rental/rental.entity";
 import { Genre } from "src/genres/genre.entity";
 import { Movie } from "src/movie/movie.entity";
-
+import { MovieGenre } from "src/middleEntities/movie_genre.entity";
+import { UserGenre } from "src/middleEntities/user_genre.entity";
+import { UserMovie } from "src/middleEntities/user_movie.entity";
 
 
 @Entity()
@@ -56,4 +58,10 @@ export class User {
   @ManyToMany(()=>Movie, (movie)=>movie.subscribedUser, { cascade:true})
   @JoinTable()
   subscribedMovie:Movie[];
+
+  @OneToMany(()=>UserGenre , (userGenre)=>userGenre.user)
+  userGenre: UserGenre[];
+
+  @OneToMany(()=>UserMovie , (userMovie)=>userMovie.user)
+  userMovie: UserMovie[];
 }

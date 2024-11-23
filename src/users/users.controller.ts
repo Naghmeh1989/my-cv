@@ -13,6 +13,7 @@ import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.d
 import { ApiTags } from '@nestjs/swagger';
 
 
+
 @ApiTags('Users')
 @Controller('users')
 @UseInterceptors(CurrentUserInterceptor)
@@ -22,17 +23,15 @@ export class UsersController {
     private usersService:UsersService,
     private authService:AuthService
   ){}
-  /*@Post('/signup')
-  async createUser(@Body() body:CreateUserDto, @Session() session:any){
+  @Post('/signup')
+  async createUsers(@Body() body:CreateUserDto){
     const user = await this.authService.signup(body.email , body.password);
-    session.userId = user.id;
     return user;
-  } */
+  } 
  
   @Post('signin')
-  async signin(@Body() body:CreateUserDto, @Session() session: any){
+  async signin(@Body() body:CreateUserDto){
     const user = await this.authService.signin(body.email, body.password);
-    session.userId = user.id;
     return user;
   }
 
@@ -40,6 +39,17 @@ export class UsersController {
   createUser(@Body() body:CreateUserDto){
     const user = this.usersService.create(body);
     return user;
+  }
+
+  @Post('create-user-genre')
+  async createUserGenre(@Body() createUserGenre:{userId:number, genreId:number}){
+    await this.usersService.createUserGenre(createUserGenre);
+  }
+
+  
+  @Post('create-user-movie')
+  async createUserMovie(@Body() createUserMovie:{userId:number, movieId:number}){
+    await this.usersService.createUserMovie(createUserMovie);
   }
   
  
@@ -105,7 +115,5 @@ export class UsersController {
   createGenreSubscribtion(@Body() body:CreateGenresSubscribtionDto){
     return this.usersService.createSubscribtion(body);
   }
-
-
 
 }

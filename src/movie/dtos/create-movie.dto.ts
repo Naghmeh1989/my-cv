@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from "class-validator";
+import { IsString, IsArray } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateMovieDto{
   @ApiProperty()
@@ -6,6 +6,6 @@ export class CreateMovieDto{
   title:string;
 
   @ApiProperty()
-  @IsNumber()
-  genreId:number;
+  @IsArray()
+  genreIds:number[];
 }

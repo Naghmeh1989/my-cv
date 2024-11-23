@@ -12,9 +12,9 @@ export class UserGenre {
 
   @ManyToOne(()=>User, (user)=>user.subscribedGenre)
   @JoinColumn({name:'user_id', referencedColumnName:'id'})
-  user:User[];
+  user:User;
 
   @ManyToOne(()=>Genre, (genre)=>genre.subscribedUser)
   @JoinColumn({ name:'genre_id', referencedColumnName:'id'})
-  genre:Genre[];
+  genre:Genre;
 }

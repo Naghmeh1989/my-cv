@@ -19,12 +19,14 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailService } from './services/email.service';
 import { MovieGenre } from './middleEntities/movie_genre.entity';
+import { UserGenre } from './middleEntities/user_genre.entity';
+import { UserMovie } from './middleEntities/user_movie.entity';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'sqlite',
     database: 'db.sqlite',
-    entities: [User, Report, Address, Movie, Rental, Genre, MovieGenre],
+    entities: [User, Report, Address, Movie, Rental, Genre, MovieGenre, UserGenre, UserMovie],
     synchronize: true
 
   }),

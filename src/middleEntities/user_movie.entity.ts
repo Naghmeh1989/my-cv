@@ -12,9 +12,9 @@ export class UserMovie {
 
   @ManyToOne(()=>User, (user)=>user.subscribedMovie)
   @JoinColumn({name:'user_id' , referencedColumnName:'id'})
-  user:User[];
+  user:User;
 
   @ManyToOne(()=>Movie, (movie)=>movie.subscribedUser)
   @JoinColumn({name:'movie_id', referencedColumnName:'id'})
-  movie:Movie[];
+  movie:Movie;
 }
