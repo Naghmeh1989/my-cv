@@ -3,7 +3,7 @@ import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dtos/create-movie.dto';
 import { CreateMovieGenreDto } from './dtos/create-movie-genre.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { GetMovieDto } from 'src/users/dtos/get-movie.dto';
+import { GetMovieDto } from './dtos/get-movie.dto';
 
 
 
@@ -51,7 +51,7 @@ export class MovieController {
 
 
   @Get()
-  findMovieByGenreTitle(@Body() body:GetMovieDto){
-    return this.movieService.findByGenreTitle(body);
+  findMovieByGenreTitle(@Query() query:GetMovieDto){
+    return this.movieService.findByGenreTitle(query);
   }
 }

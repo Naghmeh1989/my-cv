@@ -1,14 +1,15 @@
 import { IsString, IsOptional } from "class-validator";
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GetMovieDto{
 
-  @ApiProperty()
+  
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   genreTitle: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   movieTitle: string;

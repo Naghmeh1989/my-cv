@@ -12,7 +12,7 @@ import { EmailService } from 'src/services/email.service';
 import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
 import { UserGenre } from 'src/middleEntities/user_genre.entity';
 import { UserMovie } from 'src/middleEntities/user_movie.entity';
-import { GetMovieDto } from './dtos/get-movie.dto';
+
 
 
 

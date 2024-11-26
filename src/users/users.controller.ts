@@ -7,7 +7,6 @@ import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interseptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
@@ -16,7 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage} from 'multer';
 import { v4 as uuidv4} from 'uuid';
 import * as path from 'path';
-import { Observable, of } from 'rxjs';
+
 
 
 export const storage = {storage:diskStorage({

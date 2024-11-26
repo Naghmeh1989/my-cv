@@ -12,7 +12,7 @@ import { SendRecommendationDto } from './dtos/send-movie-recommendation.dto';
 import { EmailService } from 'src/services/email.service';
 import { MovieGenre } from 'src/middleEntities/movie_genre.entity';
 import { UserMovie } from 'src/middleEntities/user_movie.entity';
-import { GetMovieDto } from 'src/users/dtos/get-movie.dto';
+import { GetMovieDto } from './dtos/get-movie.dto';
 
 @Injectable()
 export class MovieService {
@@ -125,7 +125,7 @@ export class MovieService {
   }
 
 
-  async findByGenreTitle(getMovie:GetMovieDto){
+ /* async findByGenreTitle(getMovie:GetMovieDto){
     const {genreTitle,movieTitle}=getMovie;
     const genre = await this.genresService.findByTitle(genreTitle);
     if(!genre){
@@ -136,6 +136,39 @@ export class MovieService {
     .where('genre.title = :genreTitle', { genreTitle })
     .andWhere('movie.title = :movieTitle', {movieTitle})
     .getMany();
+  }*/
+
+  async findByGenreTitle(getMovie:GetMovieDto){
+    const {genreTitle,movieTitle}=getMovie;
+    if(genreTitle && movieTitle){
+    const genre = await this.genresService.findByTitle(genreTitle);
+    if(!genre){
+      throw new NotFoundException('Genre not found');
+    }
+    return this.moviesRepository.createQueryBuilder('movie')
+    .leftJoinAndSelect('movie.genres', 'genre')
+    .where('genre.title = :genreTitle', { genreTitle })
+    .andWhere('movie.title = :movieTitle', {movieTitle})
+    .getMany();
+    }else if(genreTitle){
+      const genre = await this.genresService.findByTitle(genreTitle);
+    if(!genre){
+      throw new NotFoundException('Genre not found');
+    }
+    return this.moviesRepository.createQueryBuilder('movie')
+    .leftJoinAndSelect('movie.genres', 'genre')
+    .where('genre.title = :genreTitle', { genreTitle })
+    .getMany();
+    }else if(movieTitle){
+      return this.moviesRepository.createQueryBuilder('movie')
+      .where('movie.title = :movieTitle', {movieTitle})
+      .getMany();
+    }else{
+      return this.moviesRepository.createQueryBuilder('movie')
+      .select('*')
+      .getRawMany();
+
+    }
   }
 
   
