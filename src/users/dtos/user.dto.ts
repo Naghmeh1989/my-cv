@@ -23,4 +23,10 @@ export class UserDto{
   @ApiProperty()
   @Expose()
   mobileNumber: string;
+
+  @ApiProperty()
+  @Expose()
+  profileImage: string;
+
+
 }

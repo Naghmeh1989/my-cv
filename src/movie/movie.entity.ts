@@ -12,6 +12,9 @@ export class Movie{
   @Column()
   title:string;
 
+  @Column({nullable:true})
+  year:number;
+
   @OneToMany(()=>Rental, (rental)=>rental.movie)
   rentals:Rental[];
 

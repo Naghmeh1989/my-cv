@@ -25,4 +25,9 @@ export class UpdateUserDto{
   @IsNumber()
   @IsOptional()
   mobileNumber: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  profileImage: string;
 }

@@ -36,6 +36,9 @@ export class User {
   @Column({ nullable: true })
   countryCode:number;
 
+  @Column({nullable:true})
+  profileImage:string;
+
   @OneToMany(()=>Report, (report)=>report.user)
   reports: Report[];
 

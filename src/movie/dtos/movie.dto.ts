@@ -9,6 +9,10 @@ export class MovieDto{
 
   @ApiProperty()
   @Expose()
+  year:number;
+
+  @ApiProperty()
+  @Expose()
   @Transform(({obj})=>obj.genre.id)
-  genre:Genre;
+  genre:Genre[];
 }

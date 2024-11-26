@@ -1,5 +1,6 @@
 import { Body,Controller,Post,Get,Param,Patch,Query,Delete,
-  NotFoundException,BadRequestException,Session,UseInterceptors} from '@nestjs/common';
+  NotFoundException,BadRequestException,Session,UseInterceptors,
+  UploadedFile} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
@@ -11,17 +12,31 @@ import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateGenresSubscribtionDto } from './dtos/create-genres-subscribtion.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage} from 'multer';
+import { v4 as uuidv4} from 'uuid';
+import * as path from 'path';
+import { Observable, of } from 'rxjs';
 
 
+export const storage = {storage:diskStorage({
+  destination:'./uploads/profile-images',
+  filename:(req,file,cb)=>{
+    const filename:string = path.parse(file.originalname).name.replace(/\s/g,'')+uuidv4();
+    const extension:string = path.parse(file.originalname).ext;
+    cb(null,`${filename}${extension}`);}
+  })
+}
 
 @ApiTags('Users')
 @Controller('users')
-@UseInterceptors(CurrentUserInterceptor)
+//@UseInterceptors(CurrentUserInterceptor)
 @Serialize(UserDto)
 export class UsersController {
   constructor(
     private usersService:UsersService,
     private authService:AuthService
+   
   ){}
   @Post('/signup')
   async createUsers(@Body() body:CreateUserDto){
@@ -114,6 +129,20 @@ export class UsersController {
   @Post('/subscribe')
   createGenreSubscribtion(@Body() body:CreateGenresSubscribtionDto){
     return this.usersService.createSubscribtion(body);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', storage))
+  uploadFile(@UploadedFile() file){
+    console.log(file);
+    return ({profileImage:file.filename});
+  }
+
+  @Patch('updateProfile/:id')
+  @UseInterceptors(FileInterceptor('file', storage))
+  uploadNewFile(@UploadedFile() file,@Param('id') id:string ){
+    console.log(file);
+    return this.usersService.updateProfile(parseInt(id),{profileImage:file.filename} );
   }
 
 }
